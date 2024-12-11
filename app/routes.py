@@ -1,4 +1,4 @@
-from flask import Blueprint, request, send_from_directory
+from flask import Blueprint, request
 from flask_swagger_ui import get_swaggerui_blueprint
 from google.cloud import datastore
 
