@@ -2,7 +2,7 @@ from typing import Optional
 
 from google.cloud import datastore
 
-from utils.schemas import StackType
+from app.schemas import StackType
 
 client = datastore.Client()
 
@@ -28,25 +28,30 @@ class Datastore:
 
     @classmethod
     def get_stack_top_key(cls, stack_type: StackType) -> Optional[str]:
-        key = client.key(f"{stack_type}_top")
+        key = client.key(stack_type, "top")
         entity = client.get(key) or {}
         return entity.get("value")
 
     @classmethod
     def set_stack_top_key(cls, stack_type: StackType, value: str) -> None:
-        key = client.key(f"{stack_type}_top")
+        key = client.key(stack_type, "top")
         entity = datastore.Entity(key=key)
         entity["value"] = value
         client.put(entity)
 
     @classmethod
-    def clear_stack(cls, stack_type: StackType) -> None:
-        query = client.query(kind=stack_type)
+    def clear_kind(cls, kind: str) -> None:
+        query = client.query(kind=kind)
         keys_to_delete = (entity.key for entity in query.fetch())
         client.delete_multi(keys_to_delete)
 
     @classmethod
     def clear_all(cls) -> None:
         query = client.query(kind="__kind__")
-        keys_to_delete = (entity.key for entity in query.fetch())
+        query.keys_only()
+        kinds = [entity.key.id_or_name for entity in query.fetch()]
+        keys_to_delete = []
+        for kind in kinds:
+            query = client.query(kind=kind)
+            keys_to_delete.extend(entity.key for entity in query.fetch())
         client.delete_multi(keys_to_delete)

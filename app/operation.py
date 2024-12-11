@@ -3,8 +3,8 @@ from abc import ABC, abstractmethod
 from dataclasses import asdict
 from typing import Optional
 
-from utils.datastore_wrapper import Datastore
-from utils.schemas import Variable
+from app.datastore_wrapper import Datastore
+from app.schemas import Variable
 
 client = Datastore("Variable")
 

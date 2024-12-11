@@ -1,17 +1,15 @@
-from flask import Flask, request
+from flask import Blueprint, request
 from google.cloud import datastore
 
-from utils.datastore_wrapper import Datastore
-from utils.manager import DatastoreManager
-from utils.operation import Set, Unset
-from utils.schemas import Variable
+from app.datastore_wrapper import Datastore
+from app.manager import DatastoreManager
+from app.operation import Set, Unset
+from app.schemas import Variable
 
-app = Flask(__name__)
-
-datastore_client = datastore.Client()
+main = Blueprint('main', __name__)
 
 
-@app.route("/set", methods=["GET"])
+@main.route("/set", methods=["GET"])
 def set():
     variable_name = request.args.get("name")
     variable_value = request.args.get("value")
@@ -23,7 +21,7 @@ def set():
     return str(manager.execute(operation))
 
 
-@app.route("/get", methods=["GET"])
+@main.route("/get", methods=["GET"])
 def get():
     variable_name = request.args.get("name")
     if variable_name is None:
@@ -32,7 +30,7 @@ def get():
     return str(Datastore("Variable").get(variable_name))
 
 
-@app.route("/unset", methods=["GET"])
+@main.route("/unset", methods=["GET"])
 def unset():
     variable_name = request.args.get("name")
     if variable_name is None:
@@ -43,18 +41,18 @@ def unset():
     return str(manager.execute(operation))
 
 
-@app.route("/numequalto", methods=["GET"])
+@main.route("/numequalto", methods=["GET"])
 def numequalto():
     variable_value = request.args.get("value")
     if variable_value is None:
         return "The 'value' query parameter is required.", 400
 
-    query = datastore_client.query(kind="Variable")
+    query = datastore.Client().query(kind="Variable")
     query.add_filter("value", "=", variable_value)
     return str(len(list(query.fetch())))
 
 
-@app.route("/undo", methods=["GET"])
+@main.route("/undo", methods=["GET"])
 def undo():
     manager = DatastoreManager()
     variable = manager.undo()
@@ -63,7 +61,7 @@ def undo():
     return str(variable)
 
 
-@app.route("/redo", methods=["GET"])
+@main.route("/redo", methods=["GET"])
 def redo():
     manager = DatastoreManager()
     variable = manager.redo()
@@ -72,11 +70,7 @@ def redo():
     return str(variable)
 
 
-@app.route("/end", methods=["GET"])
+@main.route("/end", methods=["GET"])
 def end():
     Datastore.clear_all()
     return "CLEANED"
-
-
-if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=8080, debug=True)

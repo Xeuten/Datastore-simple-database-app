@@ -9,7 +9,7 @@ class Variable:
     value: Optional[str] = None
 
     def __str__(self):
-        return f"{self.name}={self.value}"
+        return f"{self.name} = {self.value}"
 
 
 class StackType(StrEnum):

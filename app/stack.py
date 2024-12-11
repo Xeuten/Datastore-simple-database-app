@@ -2,9 +2,9 @@ import json
 import uuid
 from typing import Optional
 
-from utils.datastore_wrapper import Datastore
-from utils.operation import Operation, operation_from_json
-from utils.schemas import StackType
+from app.datastore_wrapper import Datastore
+from app.operation import Operation, operation_from_json
+from app.schemas import StackType
 
 
 class Stack:
@@ -34,4 +34,4 @@ class Stack:
         return operation_from_json(top_op_dict["data"])
 
     def clear(self) -> None:
-        Datastore.clear_stack(self._stack_type)
+        Datastore.clear_kind(self._stack_type)

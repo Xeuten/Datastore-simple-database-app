@@ -1,8 +1,8 @@
 from typing import Optional
 
-from utils.operation import Operation
-from utils.schemas import StackType, Variable
-from utils.stack import Stack
+from app.operation import Operation
+from app.schemas import StackType, Variable
+from app.stack import Stack
 
 
 class DatastoreManager:
