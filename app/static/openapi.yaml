@@ -1,0 +1,160 @@
+openapi: 3.0.0
+info:
+  title: Flask Variable Manager API
+  version: 1.0.0
+  description: API for managing variables using datastore operations like set, get, unset, undo and redo.
+paths:
+  /set:
+    get:
+      tags:
+        - api
+      summary: Set a variable with a name and value.
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Name of the variable to set.
+        - name: value
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Value of the variable to set.
+      responses:
+        "200":
+          description: Variable successfully set.
+          content:
+            text/plain:
+              schema:
+                type: string
+        "400":
+          description: Missing required query parameters.
+          content:
+            text/plain:
+              schema:
+                type: string
+  /get:
+    get:
+      tags:
+        - api
+      summary: Get the value of a variable by name.
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Name of the variable to retrieve.
+      responses:
+        "200":
+          description: Variable retrieved successfully.
+          content:
+            text/plain:
+              schema:
+                type: string
+        "400":
+          description: Missing required query parameter.
+          content:
+            text/plain:
+              schema:
+                type: string
+  /unset:
+    get:
+      tags:
+        - api
+      summary: Unset a variable by name.
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Name of the variable to unset.
+      responses:
+        "200":
+          description: Variable successfully unset.
+          content:
+            text/plain:
+              schema:
+                type: string
+        "400":
+          description: Missing required query parameter.
+          content:
+            text/plain:
+              schema:
+                type: string
+  /numequalto:
+    get:
+      tags:
+        - api
+      summary: Get the number of variables with a specific value.
+      parameters:
+        - name: value
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Value to count occurrences of.
+      responses:
+        "200":
+          description: Count of variables with the specified value.
+          content:
+            text/plain:
+              schema:
+                type: string
+        "400":
+          description: Missing required query parameter.
+          content:
+            text/plain:
+              schema:
+                type: string
+  /undo:
+    get:
+      tags:
+        - api
+      summary: Undo the last operation.
+      responses:
+        "200":
+          description: Last operation undone successfully.
+          content:
+            text/plain:
+              schema:
+                type: string
+        "400":
+          description: No commands to undo.
+          content:
+            text/plain:
+              schema:
+                type: string
+  /redo:
+    get:
+      tags:
+        - api
+      summary: Redo the last undone operation.
+      responses:
+        "200":
+          description: Last undone operation redone successfully.
+          content:
+            text/plain:
+              schema:
+                type: string
+        "400":
+          description: No commands to redo.
+          content:
+            text/plain:
+              schema:
+                type: string
+  /end:
+    get:
+      tags:
+        - api
+      summary: Clear all variables and reset the datastore.
+      responses:
+        "200":
+          description: Datastore successfully cleared.
+          content:
+            text/plain:
+              schema:
+                type: string

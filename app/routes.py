@@ -1,4 +1,5 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, send_from_directory
+from flask_swagger_ui import get_swaggerui_blueprint
 from google.cloud import datastore
 
 from app.datastore_wrapper import Datastore
@@ -6,7 +7,10 @@ from app.manager import DatastoreManager
 from app.operation import Set, Unset
 from app.schemas import Variable
 
-main = Blueprint('main', __name__)
+main = Blueprint("main", __name__)
+swagger = get_swaggerui_blueprint(
+    "", "/static/openapi.yaml", config={"app_name": "Datastore API"}
+)
 
 
 @main.route("/set", methods=["GET"])
