@@ -49,7 +49,10 @@ class Datastore:
     def clear_all(cls) -> None:
         query = client.query(kind="__kind__")
         query.keys_only()
-        kinds = [entity.key.id_or_name for entity in query.fetch()]
+        kinds = [
+            entity.key.id_or_name for entity in query.fetch()
+            if not entity.key.id_or_name.startswith("__")
+        ]
         keys_to_delete = []
         for kind in kinds:
             query = client.query(kind=kind)
